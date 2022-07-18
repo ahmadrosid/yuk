@@ -57,6 +57,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.TRUE, p.parseBoolean)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.STRUCT, p.parseStructLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -105,8 +106,52 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	return lit
 }
 
+func (p *Parser) parseStructLiteral() ast.Expression {
+	lit := &ast.StructStatement{Token: p.curToken}
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	lit.Name = p.curToken
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	lit.Attributes = p.parseAttributes()
+	//if !p.expectPeek(token.LPAREN) {
+	//	return nil
+	//}
+	//lit.Block = p.parseBlockStatement()
+
+	return lit
+}
+
+func (p Parser) parseAttributes() []*ast.TypeStatement {
+	attrs := make([]*ast.TypeStatement, 0)
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return attrs
+	}
+
+	p.nextToken()
+	attr := &ast.TypeStatement{Name: p.curToken}
+	p.nextToken()
+	attr.Type = p.curToken
+	attrs = append(attrs, attr)
+
+	//for p.peekTokenIs(token.COMMA) {
+	//	//attr.Type = p.curToken
+	//}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return attrs
+}
+
 func (p *Parser) parseFunctionParams() []*ast.Identifier {
-	identifiers := []*ast.Identifier{}
+	var identifiers []*ast.Identifier
 	if p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
 		return identifiers

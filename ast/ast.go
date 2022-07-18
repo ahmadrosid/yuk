@@ -3,7 +3,6 @@ package ast
 import (
 	"bytes"
 	"github.com/ahmadrosid/yuk/token"
-	"strings"
 )
 
 type Node interface {
@@ -119,23 +118,26 @@ func (bs *BlockStatement) String() string {
 type StructStatement struct {
 	Token      token.Token
 	Name       token.Token
-	Attributes []Statement
-	Block      []BlockStatement
+	Attributes []*TypeStatement
+	Block      []*BlockStatement
 }
 
+func (ss *StructStatement) expressionNode()      {}
 func (ss *StructStatement) statementNode()       {}
 func (ss *StructStatement) TokenLiteral() string { return ss.Token.Literal }
 func (ss *StructStatement) String() string {
 	var out bytes.Buffer
+	out.WriteString("type ")
+	out.WriteString(ss.Name.Literal + " ")
 	out.WriteString(ss.Token.Literal + " ")
-	out.WriteString(ss.Name.Literal + "")
-	out.WriteString("(")
-	attributes := make([]string, 0)
+	out.WriteString("{")
+	out.WriteString("\n")
 	for _, s := range ss.Attributes {
-		attributes = append(attributes, s.String())
+		out.WriteString(s.String())
+		out.WriteString("\n")
 	}
-	out.WriteString(strings.Join(attributes, ", "))
-	out.WriteString(")")
+	out.WriteString("}")
+
 	if len(ss.Block) > 0 {
 		out.WriteString("{")
 		for _, s := range ss.Block {
@@ -153,6 +155,12 @@ type TypeStatement struct {
 
 func (ts *TypeStatement) statementNode()       {}
 func (ts *TypeStatement) TokenLiteral() string { return ts.Type.Literal }
+func (ts *TypeStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(ts.Name.Literal + " ")
+	out.WriteString(ts.Type.Literal)
+	return out.String()
+}
 
 type IntegerLiteral struct {
 	Token token.Token

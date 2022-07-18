@@ -51,12 +51,12 @@ func TestStructStatement_String(t *testing.T) {
 			&StructStatement{
 				Token: token.Token{Type: token.STRUCT, Literal: "struct"},
 				Name:  token.Token{Type: token.RETURN, Literal: "Token"},
-				Attributes: []Statement{
-					&TypeStatement{
+				Attributes: []*TypeStatement{
+					{
 						Name: token.Token{Type: token.IDENT, Literal: "Type"},
 						Type: token.Token{Type: token.IDENT, Literal: "TypeToken"},
 					},
-					&TypeStatement{
+					{
 						Name: token.Token{Type: token.STRING, Literal: "Literal"},
 						Type: token.Token{Type: token.IDENT, Literal: "string"},
 					},
@@ -65,7 +65,11 @@ func TestStructStatement_String(t *testing.T) {
 		},
 	}
 
-	if program.String() != "struct Token(Type TypeToken, Literal string)" {
-		t.Errorf("program.String() wrong, got=%q", program.String())
+	expected := `type Token struct {
+Type TypeToken
+Literal string
+}`
+	if program.String() != expected {
+		t.Errorf("program.String() wrong expected'%v', got='%v'", expected, program.String())
 	}
 }

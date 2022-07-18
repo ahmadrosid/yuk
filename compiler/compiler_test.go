@@ -30,3 +30,16 @@ func TestCompiler_GenerateFunc(t *testing.T) {
 		t.Errorf("compiler error expected %q. got=%q", expected, res)
 	}
 }
+
+func TestCompiler_GenerateStruct(t *testing.T) {
+	expected := "type Token struct {\na Some\nb string\n}"
+	input := "struct Token(a Some, b string)"
+	lex := lexer.New(input)
+	p := parser.New(lex)
+	program := p.ParseProgram()
+	com := New(program)
+	res := com.Generate()
+	if res != expected {
+		t.Errorf("compiler error expected %v. got=%v", expected, res)
+	}
+}
