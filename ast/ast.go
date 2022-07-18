@@ -161,7 +161,7 @@ func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string {
 	var out bytes.Buffer
-	// TODO: format string for IntegerLiteral
+	out.WriteString(il.Value)
 	return out.String()
 }
 

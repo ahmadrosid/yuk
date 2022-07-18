@@ -73,7 +73,9 @@ func (p *Parser) parseIdentifier() ast.Expression {
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
-	return &ast.IntegerLiteral{Token: p.curToken, Value: p.curToken.Literal}
+	lit := &ast.IntegerLiteral{Token: p.curToken}
+	lit.Value = p.curToken.Literal
+	return lit
 }
 
 func (p *Parser) parseStringLiteral() ast.Expression {
