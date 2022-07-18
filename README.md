@@ -1,7 +1,7 @@
 # yuk - Programming Language
 Programming language that compile to go.
 
-## What the fuck this is about?
+## What the hell this is about?
 I love and hate golang. I love rust safety, but I can not use it at my work.
 Golang is fine, it works it fast and enough for the day-to-day work.
 
