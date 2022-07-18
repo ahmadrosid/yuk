@@ -12,9 +12,9 @@ func TestVarStatement(t *testing.T) {
 		expectedIdentifier string
 		expectedValue      interface{}
 	}{
-		{"var x = 5\n", "x", 5},
-		{"var y = true\n", "y", true},
-		{"var foo = x\n", "foo", "x"},
+		{"var x = 5", "x", 5},
+		{"var y = true", "y", true},
+		{"var foo = x", "foo", "x"},
 	}
 
 	for _, tt := range tests {
