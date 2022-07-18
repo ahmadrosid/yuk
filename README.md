@@ -7,7 +7,7 @@ Golang is fine, it works it fast and enough for the day-to-day work.
 
 But often I found myself still need to fix some stupids bug which is dealing with panic issue because of nil pointer error. 
 
-I also hate how to stupid I'm when writing code in Go when it comes to error handling. I don't want to read repetitive code, I just want to finish my task.
+I also hate how to stupid I'm when writing code in Go when it comes to error handling. I don't want to write repetitive code, I just want to finish my task.
 
 The goal for this language is to prevent common bug because the unsafely of go, and just getting thing done and be productive.
 
