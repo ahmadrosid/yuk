@@ -108,9 +108,11 @@ func (bs *BlockStatement) statementNode()       {}
 func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
 func (bs *BlockStatement) String() string {
 	var out bytes.Buffer
+	out.WriteString("{")
 	for _, s := range bs.Statements {
 		out.WriteString(s.String())
 	}
+	out.WriteString("}")
 	return out.String()
 }
 
@@ -203,5 +205,27 @@ func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }
 func (ie *InfixExpression) String() string {
 	var out bytes.Buffer
 	// TODO: format string for StringLiteral
+	return out.String()
+}
+
+type FunctionLiteral struct {
+	Token  token.Token
+	Name   string
+	Params []*Identifier
+	Body   *BlockStatement
+}
+
+func (fl *FunctionLiteral) expressionNode()      {}
+func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FunctionLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString(fl.TokenLiteral() + " ")
+	out.WriteString(fl.Name)
+	out.WriteString("(")
+	for _, s := range fl.Params {
+		out.WriteString(s.String())
+	}
+	out.WriteString(") ")
+	out.WriteString(fl.Body.String())
 	return out.String()
 }
