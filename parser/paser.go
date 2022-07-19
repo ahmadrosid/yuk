@@ -118,33 +118,28 @@ func (p *Parser) parseStructLiteral() ast.Expression {
 	}
 
 	lit.Attributes = p.parseAttributes()
-	//if !p.expectPeek(token.LPAREN) {
-	//	return nil
-	//}
-	//lit.Block = p.parseBlockStatement()
+	if !p.curTokenIs(token.RPAREN) {
+		return nil
+	}
 
 	return lit
 }
 
-func (p Parser) parseAttributes() []*ast.TypeStatement {
+func (p *Parser) parseAttributes() []*ast.TypeStatement {
 	attrs := make([]*ast.TypeStatement, 0)
 	if p.peekTokenIs(token.RPAREN) {
-		p.nextToken()
 		return attrs
 	}
 
 	p.nextToken()
-	attr := &ast.TypeStatement{Name: p.curToken}
-	p.nextToken()
-	attr.Type = p.curToken
-	attrs = append(attrs, attr)
-
-	//for p.peekTokenIs(token.COMMA) {
-	//	//attr.Type = p.curToken
-	//}
-
-	if !p.expectPeek(token.RPAREN) {
-		return nil
+	for !p.curTokenIs(token.RPAREN) {
+		if !p.curTokenIs(token.COMMA) {
+			attr := &ast.TypeStatement{Name: p.curToken}
+			p.nextToken()
+			attr.Type = p.curToken
+			attrs = append(attrs, attr)
+		}
+		p.nextToken()
 	}
 
 	return attrs

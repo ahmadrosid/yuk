@@ -119,7 +119,7 @@ type StructStatement struct {
 	Token      token.Token
 	Name       token.Token
 	Attributes []*TypeStatement
-	Block      []*BlockStatement
+	Block      *BlockStatement
 }
 
 func (ss *StructStatement) expressionNode()      {}
@@ -137,14 +137,7 @@ func (ss *StructStatement) String() string {
 		out.WriteString("\n")
 	}
 	out.WriteString("}")
-
-	if len(ss.Block) > 0 {
-		out.WriteString("{")
-		for _, s := range ss.Block {
-			out.WriteString(s.String())
-		}
-		out.WriteString("}")
-	}
+	// TODO: handle write block
 	return out.String()
 }
 

@@ -40,6 +40,6 @@ func TestCompiler_GenerateStruct(t *testing.T) {
 	com := New(program)
 	res := com.Generate()
 	if res != expected {
-		t.Errorf("compiler error expected %v. got=%v", expected, res)
+		t.Errorf("compiler error \nexpected=%v \ngot=%v", expected, res)
 	}
 }
