@@ -35,9 +35,9 @@ struct Lexer (
     }
 }
 
-var keyword = map(string, TokenType) {
-    "fn": FUNCTION
-}
+// var keyword = map(string, TokenType) {
+//    "fn": FUNCTION
+// }
 
 func main() {
     fmt.Println("Hello world!")

@@ -132,12 +132,7 @@ func (p *Parser) parseExpressionLiteral() ast.Expression {
 	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
-
 	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-	if !p.peekTokenIs(token.EOF) && !p.expectPeek(token.NEW_LINE) {
-		return nil
-	}
-
 	return lit
 }
 
@@ -211,8 +206,8 @@ func (p *Parser) parseTypeStatement() *ast.TypeStatement {
 	p.nextToken()
 	stmt.Type = p.curToken
 
-	if p.expectPeek(token.NEW_LINE) {
-		return nil
+	if p.peekTokenIs(token.EOF) {
+		return stmt
 	}
 
 	return stmt
@@ -259,7 +254,7 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 }
 
 func (p *Parser) peekError(t token.TokenType) {
-	msg := fmt.Sprintf("expected next token to be %s, go %s instead", t, p.peekToken.Type)
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
 }
 

@@ -6,11 +6,18 @@ import (
 	"testing"
 )
 
-func compile(input string) string {
+func compile(t *testing.T, input string) string {
 	lex := lexer.New(input)
 	p := parser.New(lex)
-	com := New(p.ParseProgram())
-	return com.Generate()
+	com := New(p)
+	res, errs := com.Generate()
+	if errs != nil {
+		for _, err := range errs {
+			t.Errorf("%s\n", input)
+			t.Fatalf("error: %q", err.Error())
+		}
+	}
+	return res
 }
 
 func TestCompiler_Generate(t *testing.T) {
@@ -27,7 +34,7 @@ func TestCompiler_Generate(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		res := compile(tt.input)
+		res := compile(t, tt.input)
 		if res != tt.expected {
 			t.Errorf("compiler error expected %q. got=%q", tt.expected, res)
 		}

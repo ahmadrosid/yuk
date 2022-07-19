@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(0)
 	if len(os.Args) == 1 {
 		log.Fatalf("please provide file path!")
 	}
@@ -22,6 +23,14 @@ func main() {
 
 	lex := lexer.New(string(result))
 	par := parser.New(lex)
-	gen := compiler.New(par.ParseProgram())
-	fmt.Println(gen.Generate())
+	gen := compiler.New(par)
+
+	res, errs := gen.Generate()
+	if errs != nil {
+		for _, err := range errs {
+			log.Fatalf("error: %q", err.Error())
+		}
+	}
+
+	fmt.Println(res)
 }
