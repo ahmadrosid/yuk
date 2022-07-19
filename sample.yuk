@@ -4,7 +4,13 @@ import "fmt"
 import "encoding/json"
 
 type TokenType string
-struct Token(Type TypeToken, Literal string)
+struct Token(Type TokenType, Literal string)
+struct Lexer (
+	input        string
+	position     int
+	readPosition int
+	ch           byte
+)
 
 // this is comment
 func main() {

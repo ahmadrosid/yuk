@@ -1,7 +1,7 @@
 # yuk - Programming Language
 Programming language that compile to go.
 
-## What the hell this is about?
+## What the hell is this is about?
 I love and hate golang. I love rust safety, but I can not use it at my work.
 Golang is fine, it works it fast and enough for the day-to-day work.
 
@@ -16,11 +16,11 @@ The goal is to nil safety and be more productive. I want to write important thin
 ```go
 package main
 
-import fmt
-import encoding/json
+import "fmt"
+import "encoding/json"
 
 type TokenType string
-struct Token(Type TypeToken, Literal string)
+struct Token(Type TokenType, Literal string)
 
 struct Lexer (
 	input        string
