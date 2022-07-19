@@ -26,8 +26,8 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
-	// Delimiters
 	COMMA     = ","
+	DOT       = "."
 	SEMICOLON = ";"
 	COLON     = ":"
 
@@ -39,6 +39,7 @@ const (
 	RBRACKET = "["
 
 	PACKAGE  = "PACKAGE"
+	IMPORT   = "IMPORT"
 	FUNCTION = "FUNCTION"
 	VAR      = "VAR"
 	TRUE     = "TRUE"
@@ -58,6 +59,7 @@ type Token struct {
 
 var keywords = map[string]TokenType{
 	"package": PACKAGE,
+	"import":  IMPORT,
 	"func":    FUNCTION,
 	"var":     VAR,
 	"true":    TRUE,

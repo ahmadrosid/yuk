@@ -58,6 +58,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.TRUE, p.parseBoolean)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRUCT, p.parseStructLiteral)
+	p.registerPrefix(token.PACKAGE, p.parseExpressionLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -65,6 +66,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.SLASH, p.parseInfixExpression)
 	p.registerInfix(token.EQ, p.parseInfixExpression)
 
+	// Set curToken adn peekToken
 	p.nextToken()
 	p.nextToken()
 	return p
@@ -121,6 +123,36 @@ func (p *Parser) parseStructLiteral() ast.Expression {
 	if !p.curTokenIs(token.RPAREN) {
 		return nil
 	}
+
+	return lit
+}
+
+func (p *Parser) parseExpressionLiteral() ast.Expression {
+	lit := &ast.ExpressionLiteral{Token: p.curToken}
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if !p.peekTokenIs(token.EOF) && !p.expectPeek(token.NEW_LINE) {
+		return nil
+	}
+
+	return lit
+}
+
+func (p *Parser) parseImportStatement() ast.Statement {
+	lit := &ast.ImportStatement{Token: p.curToken}
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	var literal string
+	for p.curTokenIs(token.SLASH) || p.curTokenIs(token.IDENT) || p.curTokenIs(token.DOT) {
+		literal += p.curToken.Literal
+		p.nextToken()
+	}
+	lit.PackageName = literal
 
 	return lit
 }
@@ -304,6 +336,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.VAR:
 		return p.parseVarStatement()
+	case token.IMPORT:
+		return p.parseImportStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:

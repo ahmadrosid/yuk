@@ -68,6 +68,20 @@ func (vs *VarStatement) String() string {
 	return out.String()
 }
 
+type ExpressionLiteral struct {
+	Token token.Token
+	Name  *Identifier
+}
+
+func (pl *ExpressionLiteral) expressionNode()      {}
+func (pl *ExpressionLiteral) TokenLiteral() string { return pl.Token.Literal }
+func (pl *ExpressionLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString(pl.TokenLiteral() + " ")
+	out.WriteString(pl.Name.String())
+	return out.String()
+}
+
 type ReturnStatement struct {
 	Token       token.Token
 	ReturnValue Expression
@@ -81,6 +95,22 @@ func (rs *ReturnStatement) String() string {
 	if rs.ReturnValue != nil {
 		out.WriteString(rs.ReturnValue.String())
 	}
+	return out.String()
+}
+
+type ImportStatement struct {
+	Token       token.Token
+	PackageName string
+}
+
+func (s *ImportStatement) statementNode()       {}
+func (s *ImportStatement) TokenLiteral() string { return s.Token.Literal }
+func (s *ImportStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(s.TokenLiteral() + " ")
+	out.WriteByte('"')
+	out.WriteString(s.PackageName)
+	out.WriteByte('"')
 	return out.String()
 }
 

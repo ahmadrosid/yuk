@@ -6,40 +6,29 @@ import (
 	"testing"
 )
 
-func TestCompiler_GenerateVar(t *testing.T) {
-	expected := "var some = 1"
-	input := "var some = 1"
+func compile(input string) string {
 	lex := lexer.New(input)
 	p := parser.New(lex)
 	com := New(p.ParseProgram())
-	res := com.Generate()
-	if res != expected {
-		t.Errorf("compiler error expected %q. got=%q", expected, res)
-	}
+	return com.Generate()
 }
 
-func TestCompiler_GenerateFunc(t *testing.T) {
-	expected := "func main() {}"
-	input := "func main() {}"
-	lex := lexer.New(input)
-	p := parser.New(lex)
-	program := p.ParseProgram()
-	com := New(program)
-	res := com.Generate()
-	if res != expected {
-		t.Errorf("compiler error expected %q. got=%q", expected, res)
+func TestCompiler_Generate(t *testing.T) {
+	tests := []struct {
+		expected string
+		input    string
+	}{
+		{"var some = 1", "var some = 1"},
+		{"func main() {}", "func main() {}"},
+		{"type Token struct {\na Some\nb string\n}", "struct Token(a Some, b string)"},
+		{"package main", "package main"},
+		{"import \"encoding/json\"", "import encoding/json"},
 	}
-}
 
-func TestCompiler_GenerateStruct(t *testing.T) {
-	expected := "type Token struct {\na Some\nb string\n}"
-	input := "struct Token(a Some, b string)"
-	lex := lexer.New(input)
-	p := parser.New(lex)
-	program := p.ParseProgram()
-	com := New(program)
-	res := com.Generate()
-	if res != expected {
-		t.Errorf("compiler error \nexpected=%v \ngot=%v", expected, res)
+	for _, tt := range tests {
+		res := compile(tt.input)
+		if res != tt.expected {
+			t.Errorf("compiler error expected %q. got=%q", tt.expected, res)
+		}
 	}
 }
