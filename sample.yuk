@@ -6,6 +6,7 @@ import "encoding/json"
 type TokenType string
 struct Token(Type TypeToken, Literal string)
 
+// this is comment
 func main() {
     var name = "Ahmad Rosid"
 }
