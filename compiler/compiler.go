@@ -29,6 +29,7 @@ func (c *Compiler) Generate() (string, []error) {
 	var out bytes.Buffer
 	for _, stmt := range c.Program.Statements {
 		out.WriteString(stmt.String())
+		out.WriteByte('\n')
 	}
 	return out.String(), nil
 }

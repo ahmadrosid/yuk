@@ -146,7 +146,7 @@ func (l *Lexer) readNumber() string {
 }
 
 func (l *Lexer) readString() string {
-	position := l.position
+	position := l.position + 1
 	for {
 		l.readChar()
 		if l.ch == '"' || l.ch == 0 {

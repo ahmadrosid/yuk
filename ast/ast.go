@@ -100,7 +100,7 @@ func (rs *ReturnStatement) String() string {
 
 type ImportStatement struct {
 	Token       token.Token
-	PackageName string
+	PackageName Expression
 }
 
 func (s *ImportStatement) statementNode()       {}
@@ -108,9 +108,7 @@ func (s *ImportStatement) TokenLiteral() string { return s.Token.Literal }
 func (s *ImportStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString(s.TokenLiteral() + " ")
-	out.WriteByte('"')
-	out.WriteString(s.PackageName)
-	out.WriteByte('"')
+	out.WriteString(s.PackageName.String())
 	return out.String()
 }
 
@@ -139,7 +137,9 @@ func (bs *BlockStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString("{")
 	for _, s := range bs.Statements {
+		out.WriteString("\n\t")
 		out.WriteString(s.String())
+		out.WriteString("\n")
 	}
 	out.WriteString("}")
 	return out.String()
@@ -163,6 +163,7 @@ func (ss *StructStatement) String() string {
 	out.WriteString("{")
 	out.WriteString("\n")
 	for _, s := range ss.Attributes {
+		out.WriteString("\t")
 		out.WriteString(s.String())
 		out.WriteString("\n")
 	}
@@ -211,7 +212,9 @@ func (sl *StringLiteral) expressionNode()      {}
 func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
 func (sl *StringLiteral) String() string {
 	var out bytes.Buffer
-	// TODO: format string for StringLiteral
+	out.WriteString("\"")
+	out.WriteString(sl.Value)
+	out.WriteString("\"")
 	return out.String()
 }
 

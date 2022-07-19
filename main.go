@@ -27,8 +27,8 @@ func main() {
 
 	res, errs := gen.Generate()
 	if errs != nil {
-		for _, err := range errs {
-			log.Fatalf("error: %q", err.Error())
+		for _, e := range errs {
+			log.Fatalf("error: %q", e.Error())
 		}
 	}
 

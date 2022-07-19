@@ -26,17 +26,19 @@ func TestCompiler_Generate(t *testing.T) {
 		input    string
 	}{
 		{"package main", "package main"},
-		{"import \"encoding/json\"", "import encoding/json"},
+		{"import \"encoding/json\"", "import \"encoding/json\""},
 		{"func main() {}", "func main() {}"},
-		{"type Token struct {\na Some\nb string\n}", "struct Token(a Some, b string)"},
 		{"type TokenType string", "type TokenType string"},
+		{"type Token struct {\n\ta Some\n\tb string\n}", "struct Token(a Some, b string)"},
 		{"var some = 1", "var some = 1"},
+		{"var some = \"Ahmad Rosid\"", "var some = \"Ahmad Rosid\""},
 	}
 
 	for _, tt := range tests {
 		res := compile(t, tt.input)
-		if res != tt.expected {
-			t.Errorf("compiler error expected %q. got=%q", tt.expected, res)
+		expected := tt.expected + "\n"
+		if res != expected {
+			t.Errorf("compiler error \nexpected=%q\ngot=%q", expected, res)
 		}
 	}
 }

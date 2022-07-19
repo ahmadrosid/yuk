@@ -66,8 +66,8 @@ func TestStructStatement_String(t *testing.T) {
 	}
 
 	expected := `type Token struct {
-Type TypeToken
-Literal string
+	Type TypeToken
+	Literal string
 }`
 	if program.String() != expected {
 		t.Errorf("program.String() wrong expected'%v', got='%v'", expected, program.String())

@@ -1,44 +1,11 @@
 package main
 
-import fmt
-import encoding/json
+import "fmt"
+import "encoding/json"
 
 type TokenType string
 struct Token(Type TypeToken, Literal string)
 
-struct Lexer (
-	input        string
-	position     int
-	readPosition int
-	ch           byte
-){
-    func NewLexer(input string) *Lexer {
-        self := Lexer(input)
-        self.readChar()
-        return self
-    }
-
-    func NexToken() Token {
-        var tok Token
-
-        switch self.ch {
-            '=' =>  {
-
-            },
-            '!' => {
-
-            }
-        }
-
-        self.readChar()
-        return tok
-    }
-}
-
-// var keyword = map(string, TokenType) {
-//    "fn": FUNCTION
-// }
-
 func main() {
-    fmt.Println("Hello world!")
+    var name = "Ahmad Rosid"
 }

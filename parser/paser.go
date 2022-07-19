@@ -138,16 +138,11 @@ func (p *Parser) parseExpressionLiteral() ast.Expression {
 
 func (p *Parser) parseImportStatement() ast.Statement {
 	lit := &ast.ImportStatement{Token: p.curToken}
-	if !p.expectPeek(token.IDENT) {
+	if !p.expectPeek(token.STRING) {
 		return nil
 	}
 
-	var literal string
-	for p.curTokenIs(token.SLASH) || p.curTokenIs(token.IDENT) || p.curTokenIs(token.DOT) {
-		literal += p.curToken.Literal
-		p.nextToken()
-	}
-	lit.PackageName = literal
+	lit.PackageName = p.parseStringLiteral()
 
 	return lit
 }
@@ -272,9 +267,6 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	p.nextToken()
 
 	stmt.Value = p.parseExpression(LOWEST)
-	if p.peekTokenIs(token.NEW_LINE) {
-		p.nextToken()
-	}
 
 	return stmt
 }
