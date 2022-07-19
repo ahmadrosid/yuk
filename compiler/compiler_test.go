@@ -18,11 +18,12 @@ func TestCompiler_Generate(t *testing.T) {
 		expected string
 		input    string
 	}{
-		{"var some = 1", "var some = 1"},
-		{"func main() {}", "func main() {}"},
-		{"type Token struct {\na Some\nb string\n}", "struct Token(a Some, b string)"},
 		{"package main", "package main"},
 		{"import \"encoding/json\"", "import encoding/json"},
+		{"func main() {}", "func main() {}"},
+		{"type Token struct {\na Some\nb string\n}", "struct Token(a Some, b string)"},
+		{"type TokenType string", "type TokenType string"},
+		{"var some = 1", "var some = 1"},
 	}
 
 	for _, tt := range tests {

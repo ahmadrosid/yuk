@@ -203,6 +203,21 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 	return block
 }
 
+func (p *Parser) parseTypeStatement() *ast.TypeStatement {
+	typeToken := p.curToken
+	stmt := &ast.TypeStatement{Token: &typeToken}
+	p.nextToken()
+	stmt.Name = p.curToken
+	p.nextToken()
+	stmt.Type = p.curToken
+
+	if p.expectPeek(token.NEW_LINE) {
+		return nil
+	}
+
+	return stmt
+}
+
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
@@ -340,6 +355,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseImportStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.TYPE:
+		return p.parseTypeStatement()
 	default:
 		return p.parseExpressionStatement()
 	}

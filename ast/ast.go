@@ -172,14 +172,18 @@ func (ss *StructStatement) String() string {
 }
 
 type TypeStatement struct {
-	Name token.Token
-	Type token.Token
+	Token *token.Token
+	Name  token.Token
+	Type  token.Token
 }
 
 func (ts *TypeStatement) statementNode()       {}
-func (ts *TypeStatement) TokenLiteral() string { return ts.Type.Literal }
+func (ts *TypeStatement) TokenLiteral() string { return ts.Token.Literal }
 func (ts *TypeStatement) String() string {
 	var out bytes.Buffer
+	if ts.Token != nil {
+		out.WriteString(ts.TokenLiteral() + " ")
+	}
 	out.WriteString(ts.Name.Literal + " ")
 	out.WriteString(ts.Type.Literal)
 	return out.String()
