@@ -12,6 +12,10 @@ struct Lexer (
 	ch           byte
 )
 
+func ReturnFunc() string {
+    return "hello"
+}
+
 // this is comment
 func main() {
     var name = "Ahmad Rosid"

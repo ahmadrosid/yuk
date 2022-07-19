@@ -247,10 +247,11 @@ func (ie *InfixExpression) String() string {
 }
 
 type FunctionLiteral struct {
-	Token  token.Token
-	Name   string
-	Params []*Identifier
-	Body   *BlockStatement
+	Token      token.Token
+	Name       string
+	Params     []*Identifier
+	ReturnType Expression
+	Body       *BlockStatement
 }
 
 func (fl *FunctionLiteral) expressionNode()      {}
@@ -264,6 +265,10 @@ func (fl *FunctionLiteral) String() string {
 		out.WriteString(s.String())
 	}
 	out.WriteString(") ")
+	if fl.ReturnType != nil {
+		out.WriteString(fl.ReturnType.TokenLiteral())
+		out.WriteString(" ")
+	}
 	out.WriteString(fl.Body.String())
 	return out.String()
 }

@@ -101,6 +101,16 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 		return nil
 	}
 	lit.Params = p.parseFunctionParams()
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	if !p.peekTokenIs(token.LBRACE) {
+		p.nextToken()
+		lit.ReturnType = p.parseExpression(LOWEST)
+	}
+
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}
@@ -170,7 +180,6 @@ func (p *Parser) parseAttributes() []*ast.TypeStatement {
 func (p *Parser) parseFunctionParams() []*ast.Identifier {
 	var identifiers []*ast.Identifier
 	if p.peekTokenIs(token.RPAREN) {
-		p.nextToken()
 		return identifiers
 	}
 
@@ -249,7 +258,7 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 }
 
 func (p *Parser) peekError(t token.TokenType) {
-	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
+	msg := fmt.Sprintf("expected next token to be '%s', got '%s' instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
 }
 

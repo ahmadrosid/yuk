@@ -32,6 +32,7 @@ func TestCompiler_Generate(t *testing.T) {
 		{"type Token struct {\n\ta Some\n\tb string\n}", "struct Token(a Some, b string)"},
 		{"var some = 1", "var some = 1"},
 		{"var some = \"Ahmad Rosid\"", "var some = \"Ahmad Rosid\""},
+		{"func ReturnFunc() string {\n\treturn \"hello\"\n}", "func ReturnFunc() string {\treturn \"hello\"}"},
 	}
 
 	for _, tt := range tests {
