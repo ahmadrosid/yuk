@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"fmt"
 	"github.com/ahmadrosid/yuk/token"
 	"testing"
 )
@@ -41,6 +42,41 @@ func TestReturnStatement_String(t *testing.T) {
 	}
 
 	if program.String() != "return five" {
+		t.Errorf("program.String() wrong, got=%q", program.String())
+	}
+}
+
+func TestCaseStatement_String(t *testing.T) {
+	program := &Program{
+		Statements: []Statement{
+			&SwitchStatement{
+				Token: token.Token{Type: token.SWITCH, Literal: "switch"},
+				Input: token.Token{Type: token.CHAR, Literal: "="},
+				Case: &CaseLiteral{
+					Token: token.Token{Type: token.CHAR, Literal: "="},
+					Body: &BlockStatement{
+						Token: token.Token{Type: token.LBRACE, Literal: "{"},
+						Statements: []Statement{
+							&VarStatement{
+								Token: token.Token{Type: token.VAR, Literal: "var"},
+								Name: &Identifier{
+									Token: token.Token{Type: token.IDENT, Literal: "five"},
+									Value: "five",
+								},
+								Value: &Identifier{
+									Token: token.Token{Type: token.IDENT, Literal: "other"},
+									Value: "5",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	fmt.Printf("%s\n", program.String())
+	if program.String() != "switch '='{case '=': {\nvar five = 5\n}}" {
 		t.Errorf("program.String() wrong, got=%q", program.String())
 	}
 }

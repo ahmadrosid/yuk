@@ -190,6 +190,57 @@ func (ts *TypeStatement) String() string {
 	return out.String()
 }
 
+type SwitchStatement struct {
+	Token token.Token
+	Input token.Token
+	Case  *CaseLiteral
+}
+
+func (ss *SwitchStatement) statementNode()       {}
+func (ss *SwitchStatement) TokenLiteral() string { return ss.Token.Literal }
+func (ss *SwitchStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(ss.TokenLiteral() + " ")
+	if ss.Input.Type == token.CHAR {
+		out.WriteString("'")
+		out.WriteString(ss.Input.Literal)
+		out.WriteString("'")
+	} else {
+		out.WriteString(ss.Input.Literal)
+	}
+
+	out.WriteString("{")
+	out.WriteString(ss.Case.String())
+	out.WriteString("}")
+
+	return out.String()
+}
+
+type CaseLiteral struct {
+	Token token.Token
+	Body  *BlockStatement
+}
+
+func (cl *CaseLiteral) expressionNode()      {}
+func (cl *CaseLiteral) TokenLiteral() string { return cl.Token.Literal }
+func (cl *CaseLiteral) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("case ")
+	if cl.Token.Type == token.CHAR {
+		out.WriteString("'")
+		out.WriteString(cl.Token.Literal)
+		out.WriteString("'")
+	} else {
+		out.WriteString(cl.Token.Literal)
+	}
+	out.WriteString(": ")
+
+	out.WriteString(cl.Body.String())
+
+	return out.String()
+}
+
 type IntegerLiteral struct {
 	Token token.Token
 	Value string

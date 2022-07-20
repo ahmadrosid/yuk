@@ -62,8 +62,8 @@ func main() {
 
 **Roadmap**
 - [x] Easier to create struct
+- [x] Simple switch statement
 - [ ] Shortcut create map
-- [ ] Simple switch statement
 - [ ] Easier to implement struct
 - [ ] Mutable and immutable struct implementation
 - [ ] Macro

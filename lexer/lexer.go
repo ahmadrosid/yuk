@@ -31,6 +31,8 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
+	case '.':
+		tok = newToken(token.DOT, l.ch)
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '!':
@@ -72,6 +74,11 @@ func (l *Lexer) NextToken() token.Token {
 	case '"':
 		tok.Type = token.STRING
 		tok.Literal = l.readString()
+	case '\'':
+		tok.Type = token.CHAR
+		l.readChar()
+		tok.Literal = string(l.ch)
+		l.readChar()
 	case '[':
 		tok = newToken(token.LBRACKET, l.ch)
 	case ']':

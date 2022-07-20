@@ -217,6 +217,40 @@ func (p *Parser) parseTypeStatement() *ast.TypeStatement {
 	return stmt
 }
 
+func (p *Parser) parseSwitchStatement() *ast.SwitchStatement {
+	stmt := &ast.SwitchStatement{Token: p.curToken}
+
+	p.nextToken()
+	stmt.Input = p.curToken
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	stmt.Case = p.parseCaseLiteral()
+
+	return stmt
+}
+
+func (p *Parser) parseCaseLiteral() *ast.CaseLiteral {
+	p.nextToken()
+	lit := &ast.CaseLiteral{Token: p.curToken}
+
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	if !p.expectPeek(token.GT) {
+		return nil
+	}
+
+	p.nextToken()
+	lit.Body = p.parseBlockStatement()
+
+	p.nextToken()
+	return lit
+}
+
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
@@ -353,6 +387,9 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseReturnStatement()
 	case token.TYPE:
 		return p.parseTypeStatement()
+	case token.SWITCH:
+		res := p.parseSwitchStatement()
+		return res
 	default:
 		return p.parseExpressionStatement()
 	}
