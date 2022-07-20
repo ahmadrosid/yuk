@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+
 	"github.com/ahmadrosid/yuk/token"
 )
 
@@ -137,7 +138,7 @@ func (bs *BlockStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString("{")
 	for _, s := range bs.Statements {
-		out.WriteString("\n\t")
+		out.WriteString("\n")
 		out.WriteString(s.String())
 		out.WriteString("\n")
 	}
@@ -163,7 +164,6 @@ func (ss *StructStatement) String() string {
 	out.WriteString("{")
 	out.WriteString("\n")
 	for _, s := range ss.Attributes {
-		out.WriteString("\t")
 		out.WriteString(s.String())
 		out.WriteString("\n")
 	}

@@ -1,9 +1,10 @@
 package compiler
 
 import (
+	"testing"
+
 	"github.com/ahmadrosid/yuk/lexer"
 	"github.com/ahmadrosid/yuk/parser"
-	"testing"
 )
 
 func compile(t *testing.T, input string) string {
@@ -11,7 +12,7 @@ func compile(t *testing.T, input string) string {
 	p := parser.New(lex)
 	com := New(p)
 	res, errs := com.Generate()
-	if errs != nil {
+	if len(errs) > 0 {
 		for _, err := range errs {
 			t.Errorf("%s\n", input)
 			t.Fatalf("error: %q", err.Error())
@@ -29,10 +30,10 @@ func TestCompiler_Generate(t *testing.T) {
 		{"import \"encoding/json\"", "import \"encoding/json\""},
 		{"func main() {}", "func main() {}"},
 		{"type TokenType string", "type TokenType string"},
-		{"type Token struct {\n\ta Some\n\tb string\n}", "struct Token(a Some, b string)"},
+		{"type Token struct {\na Some\nb string\n}", "struct Token(a Some, b string)"},
 		{"var some = 1", "var some = 1"},
 		{"var some = \"Ahmad Rosid\"", "var some = \"Ahmad Rosid\""},
-		{"func ReturnFunc() string {\n\treturn \"hello\"\n}", "func ReturnFunc() string {\treturn \"hello\"}"},
+		{"func ReturnFunc() string {\nreturn \"hello\"\n}", "func ReturnFunc() string {return \"hello\"}"},
 	}
 
 	for _, tt := range tests {
