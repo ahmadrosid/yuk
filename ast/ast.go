@@ -168,7 +168,6 @@ func (ss *StructStatement) String() string {
 		out.WriteString("\n")
 	}
 	out.WriteString("}")
-	// TODO: handle write block
 	return out.String()
 }
 
@@ -205,9 +204,14 @@ func (ss *SwitchStatement) String() string {
 		out.WriteString("'")
 		out.WriteString(ss.Input.Literal)
 		out.WriteString("'")
+	} else if ss.Input.Type == token.STRING {
+		out.WriteString("\"")
+		out.WriteString(ss.Input.Literal)
+		out.WriteString("\"")
 	} else {
 		out.WriteString(ss.Input.Literal)
 	}
+	out.WriteByte(' ')
 
 	out.WriteString("{")
 	for _, c := range ss.Case {
@@ -237,6 +241,10 @@ func (cl *CaseLiteral) String() string {
 			out.WriteString("'")
 			out.WriteString(cl.Token.Literal)
 			out.WriteString("'")
+		} else if cl.Token.Type == token.STRING {
+			out.WriteString("\"")
+			out.WriteString(cl.Token.Literal)
+			out.WriteString("\"")
 		} else {
 			out.WriteString(cl.Token.Literal)
 		}

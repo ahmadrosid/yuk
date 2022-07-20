@@ -20,7 +20,7 @@ func ReturnFunc() string {
 func main() {
     var name = "Ahmad Rosid"
 
-    switch '=' {
+    switch name {
         '=' => {
             var you = "me"
             break
