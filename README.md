@@ -59,3 +59,14 @@ func main() {
     fmt.Println("Hello world!")
 }
 ```
+
+**Roadmap**
+- [x] Easier to create struct
+- [ ] Shortcut create map
+- [ ] Simple switch statement
+- [ ] Easier to implement struct
+- [ ] Mutable and immutable struct implementation
+- [ ] Macro
+- [ ] Typechecker
+- [ ] Unsafe
+- 
