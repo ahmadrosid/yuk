@@ -23,6 +23,9 @@ func main() {
     switch '=' {
         '=' => {
             var you = "me"
-        }
+        },
+        '!' => {
+            var you = "me"
+        },
     }
 }
