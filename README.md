@@ -63,7 +63,7 @@ func main() {
 **Roadmap**
 - [x] Easier to create struct
 - [x] Simple switch statement
-  - [ ] Handle multiple case statement
+  - [x] Handle multiple case statement
 - [ ] Shortcut create map
 - [ ] Easier to implement struct
 - [ ] Mutable and immutable struct implementation

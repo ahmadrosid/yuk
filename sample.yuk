@@ -1,4 +1,4 @@
-package main
+package yuk
 
 import "fmt"
 import "encoding/json"
@@ -23,9 +23,15 @@ func main() {
     switch '=' {
         '=' => {
             var you = "me"
+            break
         },
         '!' => {
             var you = "me"
+            break
         },
+        _ => {
+            var nu = "no"
+            break
+        }
     }
 }

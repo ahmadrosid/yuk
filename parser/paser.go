@@ -227,7 +227,16 @@ func (p *Parser) parseSwitchStatement() *ast.SwitchStatement {
 		return nil
 	}
 
-	stmt.Case = p.parseCaseLiteral()
+	stmt.Case = append(stmt.Case, p.parseCaseLiteral())
+
+	if p.curTokenIs(token.COMMA) {
+		for {
+			stmt.Case = append(stmt.Case, p.parseCaseLiteral())
+			if p.curTokenIs(token.RBRACE) {
+				break
+			}
+		}
+	}
 
 	return stmt
 }
@@ -388,8 +397,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.TYPE:
 		return p.parseTypeStatement()
 	case token.SWITCH:
-		res := p.parseSwitchStatement()
-		return res
+		return p.parseSwitchStatement()
 	default:
 		return p.parseExpressionStatement()
 	}

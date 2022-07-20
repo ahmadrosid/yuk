@@ -27,10 +27,11 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
-	COMMA     = ","
-	DOT       = "."
-	SEMICOLON = ";"
-	COLON     = ":"
+	COMMA      = ","
+	DOT        = "."
+	SEMICOLON  = ";"
+	COLON      = ":"
+	UNDERSCORE = "_"
 
 	LPAREN   = "("
 	RPAREN   = ")"

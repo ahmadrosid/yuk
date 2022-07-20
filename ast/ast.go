@@ -193,7 +193,7 @@ func (ts *TypeStatement) String() string {
 type SwitchStatement struct {
 	Token token.Token
 	Input token.Token
-	Case  *CaseLiteral
+	Case  []*CaseLiteral
 }
 
 func (ss *SwitchStatement) statementNode()       {}
@@ -210,7 +210,10 @@ func (ss *SwitchStatement) String() string {
 	}
 
 	out.WriteString("{")
-	out.WriteString(ss.Case.String())
+	for _, c := range ss.Case {
+		out.WriteString(c.String())
+		out.WriteString("\n")
+	}
 	out.WriteString("}")
 
 	return out.String()
@@ -226,14 +229,19 @@ func (cl *CaseLiteral) TokenLiteral() string { return cl.Token.Literal }
 func (cl *CaseLiteral) String() string {
 	var out bytes.Buffer
 
-	out.WriteString("case ")
-	if cl.Token.Type == token.CHAR {
-		out.WriteString("'")
-		out.WriteString(cl.Token.Literal)
-		out.WriteString("'")
+	if cl.Token.Type == token.UNDERSCORE {
+		out.WriteString("default")
 	} else {
-		out.WriteString(cl.Token.Literal)
+		out.WriteString("case ")
+		if cl.Token.Type == token.CHAR {
+			out.WriteString("'")
+			out.WriteString(cl.Token.Literal)
+			out.WriteString("'")
+		} else {
+			out.WriteString(cl.Token.Literal)
+		}
 	}
+
 	out.WriteString(": ")
 
 	out.WriteString(cl.Body.String())

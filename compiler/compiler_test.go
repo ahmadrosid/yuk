@@ -34,7 +34,7 @@ func TestCompiler_Generate(t *testing.T) {
 		{"var some = 1", "var some = 1"},
 		{"var some = \"Ahmad Rosid\"", "var some = \"Ahmad Rosid\""},
 		{"func ReturnFunc() string {\nreturn \"hello\"\n}", "func ReturnFunc() string {return \"hello\"}"},
-		{"switch '='{case '=': {\nvar you = \"me\"\n}}", "switch '=' {\n'=' => {\nvar you = \"me\"\n}\n}"},
+		{"switch '='{case '=': {\nvar you = \"me\"\n}\n}", "switch '=' {\n'=' => {\nvar you = \"me\"\n}\n}"},
 	}
 
 	for _, tt := range tests {

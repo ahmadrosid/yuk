@@ -1,7 +1,6 @@
 package ast
 
 import (
-	"fmt"
 	"github.com/ahmadrosid/yuk/token"
 	"testing"
 )
@@ -52,20 +51,22 @@ func TestCaseStatement_String(t *testing.T) {
 			&SwitchStatement{
 				Token: token.Token{Type: token.SWITCH, Literal: "switch"},
 				Input: token.Token{Type: token.CHAR, Literal: "="},
-				Case: &CaseLiteral{
-					Token: token.Token{Type: token.CHAR, Literal: "="},
-					Body: &BlockStatement{
-						Token: token.Token{Type: token.LBRACE, Literal: "{"},
-						Statements: []Statement{
-							&VarStatement{
-								Token: token.Token{Type: token.VAR, Literal: "var"},
-								Name: &Identifier{
-									Token: token.Token{Type: token.IDENT, Literal: "five"},
-									Value: "five",
-								},
-								Value: &Identifier{
-									Token: token.Token{Type: token.IDENT, Literal: "other"},
-									Value: "5",
+				Case: []*CaseLiteral{
+					{
+						Token: token.Token{Type: token.CHAR, Literal: "="},
+						Body: &BlockStatement{
+							Token: token.Token{Type: token.LBRACE, Literal: "{"},
+							Statements: []Statement{
+								&VarStatement{
+									Token: token.Token{Type: token.VAR, Literal: "var"},
+									Name: &Identifier{
+										Token: token.Token{Type: token.IDENT, Literal: "five"},
+										Value: "five",
+									},
+									Value: &Identifier{
+										Token: token.Token{Type: token.IDENT, Literal: "other"},
+										Value: "5",
+									},
 								},
 							},
 						},
@@ -75,8 +76,7 @@ func TestCaseStatement_String(t *testing.T) {
 		},
 	}
 
-	fmt.Printf("%s\n", program.String())
-	if program.String() != "switch '='{case '=': {\nvar five = 5\n}}" {
+	if program.String() != "switch '='{case '=': {\nvar five = 5\n}\n}" {
 		t.Errorf("program.String() wrong, got=%q", program.String())
 	}
 }
@@ -102,10 +102,10 @@ func TestStructStatement_String(t *testing.T) {
 	}
 
 	expected := `type Token struct {
-	Type TypeToken
-	Literal string
+Type TypeToken
+Literal string
 }`
 	if program.String() != expected {
-		t.Errorf("program.String() wrong expected'%v', got='%v'", expected, program.String())
+		t.Errorf("program.String() wrong \nexpected='%q' \ngot='%q'", expected, program.String())
 	}
 }
