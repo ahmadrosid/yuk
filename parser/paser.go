@@ -162,12 +162,6 @@ func (p *Parser) parseMapLiteral() ast.Expression {
 	p.nextToken()
 	lit.Value = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	if p.curTokenIs(token.INTERFACE) {
-		if !p.expectPeek(token.LBRACE) {
-			return nil
-		}
-		if !p.expectPeek(token.RBRACE) {
-			return nil
-		}
 		lit.Value.Value += "{}"
 	}
 
@@ -182,7 +176,7 @@ func (p *Parser) parseMapLiteral() ast.Expression {
 }
 
 func (p *Parser) parseHashLiteral() *ast.HashLiteral {
-	lit := &ast.HashLiteral{KeyValue: map[string]ast.Expression{}}
+	lit := &ast.HashLiteral{KeyValue: map[ast.Expression]ast.Expression{}}
 
 	if !p.peekTokenIs(token.LBRACE) {
 		return lit
@@ -192,14 +186,14 @@ func (p *Parser) parseHashLiteral() *ast.HashLiteral {
 	for {
 		p.nextToken()
 
-		key := p.curToken
+		key := p.parseExpression(LOWEST)
 		if !p.expectPeek(token.COLON) {
 			return nil
 		}
 
 		p.nextToken()
 		val := p.parseExpression(LOWEST)
-		lit.KeyValue[key.Literal] = val
+		lit.KeyValue[key] = val
 
 		if p.peekTokenIs(token.RBRACE) {
 			break

@@ -106,7 +106,7 @@ func (m *MapLiteral) String() string {
 }
 
 type HashLiteral struct {
-	KeyValue map[string]Expression
+	KeyValue map[Expression]Expression
 }
 
 func (h *HashLiteral) expressionNode()      {}
@@ -115,7 +115,7 @@ func (h *HashLiteral) String() string {
 	var out bytes.Buffer
 	out.WriteString("{\n")
 	for k, v := range h.KeyValue {
-		out.WriteString(k)
+		out.WriteString(k.String())
 		out.WriteString(":")
 		out.WriteString(v.String())
 		out.WriteString(",\n")

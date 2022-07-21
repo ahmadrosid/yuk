@@ -35,8 +35,8 @@ func TestCompiler_Generate(t *testing.T) {
 		{"var some = \"Ahmad Rosid\"", "var some = \"Ahmad Rosid\""},
 		{"func ReturnFunc() string {\nreturn \"hello\"\n}", "func ReturnFunc() string {return \"hello\"}"},
 		{"switch '=' {case '=': {\nvar you = \"me\"\n}\n}", "switch '=' {\n'=' => {\nvar you = \"me\"\n}\n}"},
-		{"var data = map[string]interface{}", "var data = map(string, interface{})"},
-		{"var data = map[string]interface{}{\na:1,\n}", "var data = map(string, interface{}){\"a\": 1}"},
+		{"var data = map[string]interface{}", "var data = map(string, interface)"},
+		{"var data = map[string]interface{}{\n\"a\":1,\n}", "var data = map(string, interface){\"a\": 1}"},
 	}
 
 	for _, tt := range tests {
