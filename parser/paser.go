@@ -175,7 +175,9 @@ func (p *Parser) parseMapLiteral() ast.Expression {
 		return nil
 	}
 
-	lit.KeyValue = p.parseHashLiteral()
+	if p.peekTokenIs(token.LBRACE) {
+		lit.KeyValue = p.parseHashLiteral()
+	}
 	return lit
 }
 

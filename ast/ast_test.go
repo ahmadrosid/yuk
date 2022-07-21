@@ -76,7 +76,7 @@ func TestCaseStatement_String(t *testing.T) {
 		},
 	}
 
-	if program.String() != "switch '='{case '=': {\nvar five = 5\n}\n}" {
+	if program.String() != "switch '=' {case '=': {\nvar five = 5\n}\n}" {
 		t.Errorf("program.String() wrong, got=%q", program.String())
 	}
 }
