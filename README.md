@@ -66,6 +66,9 @@ func main() {
   - [x] Handle multiple case statement
 - [x] Shortcut map
 - [ ] Anonymous struct
+- [ ] String extentions `"some".len()`, `some.is_empty()`
+- [ ] Array extentions `[1,2,3].len()`, `arr.is_empty()`
+- [ ] Anonymous struct
 - [ ] Easier to implement struct
 - [ ] Mutable and immutable struct implementation
 - [ ] Macro
