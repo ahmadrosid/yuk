@@ -59,6 +59,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRUCT, p.parseStructLiteral)
 	p.registerPrefix(token.PACKAGE, p.parseExpressionLiteral)
+	p.registerPrefix(token.MAP, p.parseMapLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -143,6 +144,67 @@ func (p *Parser) parseExpressionLiteral() ast.Expression {
 		return nil
 	}
 	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	return lit
+}
+
+func (p *Parser) parseMapLiteral() ast.Expression {
+	lit := &ast.MapLiteral{Token: p.curToken}
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	p.nextToken()
+	lit.Key = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if !p.expectPeek(token.COMMA) {
+		return nil
+	}
+
+	p.nextToken()
+	lit.Value = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if p.curTokenIs(token.INTERFACE) {
+		if !p.expectPeek(token.LBRACE) {
+			return nil
+		}
+		if !p.expectPeek(token.RBRACE) {
+			return nil
+		}
+		lit.Value.Value += "{}"
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	lit.KeyValue = p.parseHashLiteral()
+	return lit
+}
+
+func (p *Parser) parseHashLiteral() *ast.HashLiteral {
+	lit := &ast.HashLiteral{KeyValue: map[string]ast.Expression{}}
+
+	if !p.peekTokenIs(token.LBRACE) {
+		return lit
+	}
+
+	p.nextToken()
+	for {
+		p.nextToken()
+
+		key := p.curToken
+		if !p.expectPeek(token.COLON) {
+			return nil
+		}
+
+		p.nextToken()
+		val := p.parseExpression(LOWEST)
+		lit.KeyValue[key.Literal] = val
+
+		if p.peekTokenIs(token.RBRACE) {
+			break
+		}
+	}
+
+	p.nextToken()
 	return lit
 }
 

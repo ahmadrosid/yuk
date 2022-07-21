@@ -40,18 +40,20 @@ const (
 	LBRACKET = "["
 	RBRACKET = "["
 
-	PACKAGE  = "PACKAGE"
-	IMPORT   = "IMPORT"
-	FUNCTION = "FUNCTION"
-	VAR      = "VAR"
-	TRUE     = "TRUE"
-	FALSE    = "FALSE"
-	IF       = "IF"
-	ELSE     = "ELSE"
-	RETURN   = "RETURN"
-	STRUCT   = "STRUCT"
-	SWITCH   = "SWITCH"
-	TYPE     = "TYPE"
+	PACKAGE   = "PACKAGE"
+	IMPORT    = "IMPORT"
+	FUNCTION  = "FUNCTION"
+	VAR       = "VAR"
+	MAP       = "MAP"
+	TRUE      = "TRUE"
+	FALSE     = "FALSE"
+	INTERFACE = "INTERFACE"
+	IF        = "IF"
+	ELSE      = "ELSE"
+	RETURN    = "RETURN"
+	STRUCT    = "STRUCT"
+	SWITCH    = "SWITCH"
+	TYPE      = "TYPE"
 )
 
 type Token struct {
@@ -60,19 +62,21 @@ type Token struct {
 }
 
 var keywords = map[string]TokenType{
-	"package": PACKAGE,
-	"import":  IMPORT,
-	"func":    FUNCTION,
-	"var":     VAR,
-	"true":    TRUE,
-	"false":   FALSE,
-	"if":      IF,
-	"else":    ELSE,
-	"return":  RETURN,
-	"struct":  STRUCT,
-	"switch":  SWITCH,
-	"string":  STRING,
-	"type":    TYPE,
+	"package":   PACKAGE,
+	"import":    IMPORT,
+	"func":      FUNCTION,
+	"var":       VAR,
+	"map":       MAP,
+	"true":      TRUE,
+	"false":     FALSE,
+	"interface": INTERFACE,
+	"if":        IF,
+	"else":      ELSE,
+	"return":    RETURN,
+	"struct":    STRUCT,
+	"switch":    SWITCH,
+	"string":    STRING,
+	"type":      TYPE,
 }
 
 func LookupIdent(ident string) TokenType {

@@ -83,6 +83,47 @@ func (pl *ExpressionLiteral) String() string {
 	return out.String()
 }
 
+type MapLiteral struct {
+	Token    token.Token
+	Key      *Identifier
+	Value    *Identifier
+	KeyValue *HashLiteral
+}
+
+func (m *MapLiteral) expressionNode()      {}
+func (m *MapLiteral) TokenLiteral() string { return m.Token.Literal }
+func (m *MapLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString(m.TokenLiteral())
+	out.WriteString("[")
+	out.WriteString(m.Key.String())
+	out.WriteString("]")
+	out.WriteString(m.Value.String())
+	if m.KeyValue != nil {
+		out.WriteString(m.KeyValue.String())
+	}
+	return out.String()
+}
+
+type HashLiteral struct {
+	KeyValue map[string]Expression
+}
+
+func (h *HashLiteral) expressionNode()      {}
+func (h *HashLiteral) TokenLiteral() string { return "" }
+func (h *HashLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString("{\n")
+	for k, v := range h.KeyValue {
+		out.WriteString(k)
+		out.WriteString(":")
+		out.WriteString(v.String())
+		out.WriteString(",\n")
+	}
+	out.WriteString("}")
+	return out.String()
+}
+
 type ReturnStatement struct {
 	Token       token.Token
 	ReturnValue Expression
