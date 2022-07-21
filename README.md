@@ -64,7 +64,8 @@ func main() {
 - [x] Easier to create struct
 - [x] Simple switch statement
   - [x] Handle multiple case statement
-- [ ] Shortcut create map
+- [x] Shortcut map
+- [ ] Anonymous struct
 - [ ] Easier to implement struct
 - [ ] Mutable and immutable struct implementation
 - [ ] Macro
