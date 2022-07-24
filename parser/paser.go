@@ -54,7 +54,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
-	p.registerPrefix(token.STRING, p.parseStringLiteral)
+	p.registerPrefix(token.STRING_LIT, p.parseStringLiteral)
+	p.registerPrefix(token.STRING, p.parseStringType)
 	p.registerPrefix(token.TRUE, p.parseBoolean)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRUCT, p.parseStructLiteral)
@@ -87,6 +88,16 @@ func (p *Parser) parseStringLiteral() ast.Expression {
 	return &ast.StringLiteral{Token: p.curToken, Value: p.curToken.Literal}
 }
 
+func (p *Parser) parseStringType() ast.Expression {
+	return &ast.ExpressionLiteral{
+		Token: p.curToken,
+		Name: &ast.Identifier{
+			Token: p.curToken,
+			Value: p.curToken.Literal,
+		},
+	}
+}
+
 func (p *Parser) parseBoolean() ast.Expression {
 	return &ast.Boolean{Token: p.curToken, Value: p.curToken.Literal}
 }
@@ -107,15 +118,18 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 		return nil
 	}
 
-	if !p.peekTokenIs(token.LBRACE) {
-		p.nextToken()
+	p.nextToken()
+	if !p.curTokenIs(token.LBRACE) {
 		lit.ReturnType = p.parseExpression(LOWEST)
+		p.nextToken()
 	}
 
-	if !p.expectPeek(token.LBRACE) {
+	if !p.curTokenIs(token.LBRACE) {
 		return nil
 	}
+
 	lit.Body = p.parseBlockStatement()
+
 	return lit
 }
 
@@ -131,6 +145,7 @@ func (p *Parser) parseStructLiteral() ast.Expression {
 	}
 
 	lit.Attributes = p.parseAttributes()
+
 	if !p.curTokenIs(token.RPAREN) {
 		return nil
 	}
@@ -172,6 +187,7 @@ func (p *Parser) parseMapLiteral() ast.Expression {
 	if p.peekTokenIs(token.LBRACE) {
 		lit.KeyValue = p.parseHashLiteral()
 	}
+
 	return lit
 }
 
@@ -206,7 +222,7 @@ func (p *Parser) parseHashLiteral() *ast.HashLiteral {
 
 func (p *Parser) parseImportStatement() ast.Statement {
 	lit := &ast.ImportStatement{Token: p.curToken}
-	if !p.expectPeek(token.STRING) {
+	if !p.expectPeek(token.STRING_LIT) {
 		return nil
 	}
 
@@ -215,24 +231,67 @@ func (p *Parser) parseImportStatement() ast.Statement {
 	return lit
 }
 
-func (p *Parser) parseAttributes() []*ast.TypeStatement {
-	attrs := make([]*ast.TypeStatement, 0)
+func (p *Parser) parseAttributes() []*ast.StructAttributes {
+	attrs := make([]*ast.StructAttributes, 0)
 	if p.peekTokenIs(token.RPAREN) {
 		return attrs
 	}
 
 	p.nextToken()
-	for !p.curTokenIs(token.RPAREN) {
-		if !p.curTokenIs(token.COMMA) {
-			attr := &ast.TypeStatement{Name: p.curToken}
-			p.nextToken()
-			attr.Type = p.curToken
-			attrs = append(attrs, attr)
+	for {
+		if p.curTokenIs(token.EOF) || p.curTokenIs(token.RPAREN) {
+			break
 		}
-		p.nextToken()
+		if p.curTokenIs(token.COMMA) {
+			p.nextToken()
+			continue
+		}
+
+		if p.curTokenIs(token.ILLEGAL) {
+			p.errors = append(p.errors, fmt.Sprintf("illegal token %s", p.curToken.Literal))
+			return nil
+		}
+
+		attr := p.parseStructAttributes()
+		if attr == nil {
+			return nil
+		}
+
+		attrs = append(attrs, attr)
 	}
 
 	return attrs
+}
+
+func (p *Parser) parseStructAttributes() *ast.StructAttributes {
+	attr := &ast.StructAttributes{Name: p.curToken}
+	p.nextToken()
+	attr.Type = p.curToken
+	if !p.peekTokenIs(token.EOF) {
+		p.nextToken()
+	}
+
+	if p.curTokenIs(token.BACKTICK) {
+		meta := &ast.MetaLiteral{Token: p.curToken}
+		for {
+			p.nextToken()
+			if p.curTokenIs(token.BACKTICK) {
+				p.nextToken()
+				break
+			}
+
+			keyVal := &ast.MetaKeyValueLiteral{Key: p.curToken}
+			if !p.expectPeek(token.COLON) {
+				return nil
+			}
+			p.nextToken()
+			keyVal.Value = p.parseExpression(LOWEST)
+			meta.KeyValue = append(meta.KeyValue, keyVal)
+		}
+		attr.Meta = meta
+	}
+
+	return attr
 }
 
 func (p *Parser) parseFunctionParams() []*ast.Identifier {
@@ -246,10 +305,11 @@ func (p *Parser) parseFunctionParams() []*ast.Identifier {
 
 func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 	block := &ast.BlockStatement{Token: p.curToken}
-	block.Statements = []ast.Statement{}
 	p.nextToken()
-
-	for !p.curTokenIs(token.RBRACE) && !p.curTokenIs(token.EOF) {
+	for {
+		if p.curTokenIs(token.RBRACE) || p.curTokenIs(token.EOF) {
+			break
+		}
 		stmt := p.parseStatement()
 		if stmt != nil {
 			block.Statements = append(block.Statements, stmt)
@@ -260,9 +320,9 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 	return block
 }
 
-func (p *Parser) parseTypeStatement() *ast.TypeStatement {
+func (p *Parser) parseTypeStatement() *ast.StructAttributes {
 	typeToken := p.curToken
-	stmt := &ast.TypeStatement{Token: &typeToken}
+	stmt := &ast.StructAttributes{Token: &typeToken}
 	p.nextToken()
 	stmt.Name = p.curToken
 	p.nextToken()

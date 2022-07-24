@@ -168,6 +168,38 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
+type MetaLiteral struct {
+	Token    token.Token
+	KeyValue []*MetaKeyValueLiteral
+}
+
+func (m *MetaLiteral) statementNode()       {}
+func (m *MetaLiteral) TokenLiteral() string { return m.Token.Literal }
+func (m *MetaLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString(m.TokenLiteral())
+	for _, kv := range m.KeyValue {
+		out.WriteString(kv.String())
+	}
+	out.WriteString(m.TokenLiteral())
+	return out.String()
+}
+
+type MetaKeyValueLiteral struct {
+	Key   token.Token
+	Value Expression
+}
+
+func (m *MetaKeyValueLiteral) statementNode()       {}
+func (m *MetaKeyValueLiteral) TokenLiteral() string { return "" }
+func (m *MetaKeyValueLiteral) String() string {
+	var out bytes.Buffer
+	out.WriteString(m.Key.Literal)
+	out.WriteString(":")
+	out.WriteString(m.Value.String())
+	return out.String()
+}
+
 type BlockStatement struct {
 	Token      token.Token
 	Statements []Statement
@@ -190,7 +222,7 @@ func (bs *BlockStatement) String() string {
 type StructStatement struct {
 	Token      token.Token
 	Name       token.Token
-	Attributes []*TypeStatement
+	Attributes []*StructAttributes
 	Block      *BlockStatement
 }
 
@@ -212,21 +244,26 @@ func (ss *StructStatement) String() string {
 	return out.String()
 }
 
-type TypeStatement struct {
+type StructAttributes struct {
 	Token *token.Token
 	Name  token.Token
 	Type  token.Token
+	Meta  *MetaLiteral
 }
 
-func (ts *TypeStatement) statementNode()       {}
-func (ts *TypeStatement) TokenLiteral() string { return ts.Token.Literal }
-func (ts *TypeStatement) String() string {
+func (ts *StructAttributes) statementNode()       {}
+func (ts *StructAttributes) TokenLiteral() string { return ts.Token.Literal }
+func (ts *StructAttributes) String() string {
 	var out bytes.Buffer
 	if ts.Token != nil {
 		out.WriteString(ts.TokenLiteral() + " ")
 	}
 	out.WriteString(ts.Name.Literal + " ")
 	out.WriteString(ts.Type.Literal)
+	if ts.Meta != nil {
+		out.WriteString(" ")
+		out.WriteString(ts.Meta.String())
+	}
 	return out.String()
 }
 

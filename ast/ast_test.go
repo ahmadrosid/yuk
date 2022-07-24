@@ -87,7 +87,7 @@ func TestStructStatement_String(t *testing.T) {
 			&StructStatement{
 				Token: token.Token{Type: token.STRUCT, Literal: "struct"},
 				Name:  token.Token{Type: token.RETURN, Literal: "Token"},
-				Attributes: []*TypeStatement{
+				Attributes: []*StructAttributes{
 					{
 						Name: token.Token{Type: token.IDENT, Literal: "Type"},
 						Type: token.Token{Type: token.IDENT, Literal: "TypeToken"},

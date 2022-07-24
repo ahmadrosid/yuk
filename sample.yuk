@@ -3,13 +3,13 @@ package yuk
 import "fmt"
 import "encoding/json"
 
-type TokenType string
-struct Token(Type TokenType, Literal string)
-struct Lexer (
-	input        string
-	position     int
-	readPosition int
-	ch           byte
+type Name string
+struct User(First TokenType, Last string)
+struct Post (
+	Title        string      `json:"input"`
+	CreatedBy    User        `json:"created_by"`
+	CreatedAt    Date        `json:"created_at"`
+	UpdatedAt    Date
 )
 
 func ReturnFunc() string {
@@ -22,15 +22,15 @@ func main() {
 
     switch name {
         '=' => {
-            var you = "me"
+            var you = "rock"
             break
         },
         '!' => {
-            var you = "me"
+            var me = "lads"
             break
         },
         _ => {
-            var nu = "no"
+            var nooo = "no"
             break
         }
     }
