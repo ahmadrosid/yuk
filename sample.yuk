@@ -38,4 +38,10 @@ func main() {
     var data = map(string, interface) {
         "name": 1
     }
+
+    if true {
+        var ok = "works"
+    } else {
+        var ok = "not works"
+    }
 }

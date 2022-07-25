@@ -69,6 +69,27 @@ func (vs *VarStatement) String() string {
 	return out.String()
 }
 
+type IfExpression struct {
+	Token       token.Token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+func (is *IfExpression) expressionNode()      {}
+func (is *IfExpression) TokenLiteral() string { return is.Token.Literal }
+func (is *IfExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("if ")
+	out.WriteString(is.Condition.String())
+	out.WriteString(is.Consequence.String())
+	if is.Alternative != nil {
+		out.WriteString("else")
+		out.WriteString(is.Alternative.String())
+	}
+	return out.String()
+}
+
 type ExpressionLiteral struct {
 	Token token.Token
 	Name  *Identifier
@@ -372,7 +393,7 @@ func (b *Boolean) expressionNode()      {}
 func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
 func (b *Boolean) String() string {
 	var out bytes.Buffer
-	// TODO: format string for Boolean
+	out.WriteString(b.TokenLiteral())
 	return out.String()
 }
 
