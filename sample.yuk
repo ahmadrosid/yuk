@@ -36,7 +36,8 @@ func main() {
     }
 
     var data = map(string, interface) {
-        "name": 1
+        "name": 1,
+        "date": "2022-07-27"
     }
 
     if true {

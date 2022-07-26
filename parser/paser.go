@@ -218,14 +218,12 @@ func (p *Parser) parseIfExpression() ast.Expression {
 func (p *Parser) parseHashLiteral() *ast.HashLiteral {
 	lit := &ast.HashLiteral{KeyValue: map[ast.Expression]ast.Expression{}}
 
-	if !p.peekTokenIs(token.LBRACE) {
+	if !p.expectPeek(token.LBRACE) {
 		return lit
 	}
 
-	p.nextToken()
 	for {
 		p.nextToken()
-
 		key := p.parseExpression(LOWEST)
 		if !p.expectPeek(token.COLON) {
 			return nil
@@ -235,12 +233,12 @@ func (p *Parser) parseHashLiteral() *ast.HashLiteral {
 		val := p.parseExpression(LOWEST)
 		lit.KeyValue[key] = val
 
-		if p.peekTokenIs(token.RBRACE) {
+		p.nextToken()
+		if p.curTokenIs(token.RBRACE) {
 			break
 		}
 	}
 
-	p.nextToken()
 	return lit
 }
 
