@@ -40,7 +40,6 @@ func TestCompiler_Generate(t *testing.T) {
 		{"var data = map[string]interface{}{\n\"c\":3,\n\"d\":2,\n}", "var data = map(string, interface){\"c\": 3, \"d\": 2}"},
 		{"type Post struct {\nTitle string `json:\"input\"`\nCreatedBy User `json:\"created_by\"`\nCreatedAt Date `json:\"created_at\"`\nUpdatedAt Date\n}", "struct Post (\n\tTitle        string      `json:\"input\"`\n\tCreatedBy    User        `json:\"created_by\"`\n\tCreatedAt    Date  `json:\"created_at\"`\n\tUpdatedAt    Date\n)\n"},
 	}
-
 	for _, tt := range tests {
 		res := compile(t, tt.input)
 		expected := tt.expected + "\n"

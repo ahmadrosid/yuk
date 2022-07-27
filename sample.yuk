@@ -11,6 +11,7 @@ struct Post (
 	CreatedAt    Date        `json:"created_at"`
 	UpdatedAt    Date
 )
+struct Wrong(count int)
 
 func ReturnFunc() string {
     return "hello"
@@ -23,7 +24,7 @@ func main() {
     switch name {
         '=' => {
             var you = "rock"
-            break
+            return tok
         },
         '!' => {
             var me = "lads"
