@@ -14,49 +14,54 @@ The goal for this language is to prevent common bug because the unsafely of go, 
 ## The Idea
 The goal is to nil safety and be more productive. I want to write important things not the boilerplate.
 ```go
-package main
+package yuk
 
 import "fmt"
 import "encoding/json"
 
-type TokenType string
-struct Token(Type TokenType, Literal string)
+type Name string
+struct User(First TokenType, Last string)
+struct Post (
+	Title        string      `json:"input"`
+	CreatedBy    User        `json:"created_by"`
+	CreatedAt    Date        `json:"created_at"`
+	UpdatedAt    Date
+)
+struct Wrong(count int)
 
-struct Lexer (
-	input        string
-	position     int
-	readPosition int
-	ch           byte
-){
-    func NewLexer(input string) *Lexer {
-        self := Lexer(input)
-        self.readChar()
-        return self
-    }
-
-    func NexToken() Token {
-        var tok Token
-
-        switch self.ch {
-            '=' =>  {
-
-            },
-            '!' => {
-
-            }
-        }
-        
-        self.readChar()
-        return tok
-    }
+func ReturnFunc() string {
+    return "hello"
 }
 
-var keyword = map(string, TokenType) {
-    "fn": FUNCTION
-}
-
+// this is comment
 func main() {
-    fmt.Println("Hello world!")
+    var name = "Ahmad Rosid"
+
+    switch name {
+        '=' => {
+            var you = "rock"
+            return tok
+        },
+        '!' => {
+            var me = "lads"
+            break
+        },
+        _ => {
+            var nooo = "no"
+            break
+        }
+    }
+
+    var data = map(string, interface) {
+        "name": 1,
+        "date": "2022-07-27"
+    }
+
+    if true {
+        var ok = "works"
+    } else {
+        var ok = "not works"
+    }
 }
 ```
 
