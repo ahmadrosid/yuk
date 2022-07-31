@@ -20,6 +20,7 @@ func ReturnFunc() string {
 // this is comment
 func main() {
     var name = "Ahmad Rosid"
+    lock := true
 
     switch name {
         '=' => {

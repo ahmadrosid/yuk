@@ -76,7 +76,24 @@ func New(l *lexer.Lexer) *Parser {
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {
+	if p.peekTokenIs(token.COLON) {
+		return p.parseVarExpression()
+	}
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+}
+
+func (p *Parser) parseVarExpression() ast.Expression {
+	var identifier = p.curToken
+	p.nextToken()
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+	p.nextToken()
+	return &ast.VarExpression{
+		Token: identifier,
+		Ident: identifier,
+		Value: p.parseExpression(LOWEST),
+	}
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {

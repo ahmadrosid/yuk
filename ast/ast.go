@@ -50,6 +50,23 @@ func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 func (i *Identifier) String() string       { return i.Value }
 
+// VarExpression Maybe: just use VarStatement
+type VarExpression struct {
+	Token token.Token
+	Ident token.Token
+	Value Expression
+}
+
+func (v *VarExpression) expressionNode()      {}
+func (v *VarExpression) TokenLiteral() string { return v.Token.Literal }
+func (v *VarExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString(v.TokenLiteral())
+	out.WriteString(" := ")
+	out.WriteString(v.Value.String())
+	return out.String()
+}
+
 type VarStatement struct {
 	Token token.Token
 	Name  *Identifier
