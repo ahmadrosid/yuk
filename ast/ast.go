@@ -259,7 +259,7 @@ func (bs *BlockStatement) String() string {
 
 type StructStatement struct {
 	Token      token.Token
-	Name       token.Token
+	Name       *token.Token
 	Attributes []*StructAttributes
 	Block      *BlockStatement
 }
@@ -269,8 +269,10 @@ func (ss *StructStatement) statementNode()       {}
 func (ss *StructStatement) TokenLiteral() string { return ss.Token.Literal }
 func (ss *StructStatement) String() string {
 	var out bytes.Buffer
-	out.WriteString("type ")
-	out.WriteString(ss.Name.Literal + " ")
+	if ss.Name != nil {
+		out.WriteString("type ")
+		out.WriteString(ss.Name.Literal + " ")
+	}
 	out.WriteString(ss.Token.Literal + " ")
 	out.WriteString("{")
 	out.WriteString("\n")

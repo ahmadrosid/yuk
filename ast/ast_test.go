@@ -86,7 +86,7 @@ func TestStructStatement_String(t *testing.T) {
 		Statements: []Statement{
 			&StructStatement{
 				Token: token.Token{Type: token.STRUCT, Literal: "struct"},
-				Name:  token.Token{Type: token.RETURN, Literal: "Token"},
+				Name:  &token.Token{Type: token.RETURN, Literal: "Token"},
 				Attributes: []*StructAttributes{
 					{
 						Name: token.Token{Type: token.IDENT, Literal: "Type"},
@@ -104,6 +104,32 @@ func TestStructStatement_String(t *testing.T) {
 	expected := `type Token struct {
 Type TypeToken
 Literal string
+}`
+	if program.String() != expected {
+		t.Errorf("program.String() wrong \nexpected='%q' \ngot='%q'", expected, program.String())
+	}
+}
+
+func TestAnonymousStructStatement_String(t *testing.T) {
+	program := &Program{
+		Statements: []Statement{
+			&ExpressionStatement{
+				Token: token.Token{Type: token.STRUCT, Literal: "struct"},
+				Expression: &StructStatement{
+					Token: token.Token{Type: token.STRUCT, Literal: "struct"},
+					Attributes: []*StructAttributes{
+						{
+							Name: token.Token{Type: token.IDENT, Literal: "Name"},
+							Type: token.Token{Type: token.IDENT, Literal: "string"},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	expected := `struct {
+Name string
 }`
 	if program.String() != expected {
 		t.Errorf("program.String() wrong \nexpected='%q' \ngot='%q'", expected, program.String())

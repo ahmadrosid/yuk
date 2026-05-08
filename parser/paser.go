@@ -153,11 +153,12 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 
 func (p *Parser) parseStructLiteral() ast.Expression {
 	lit := &ast.StructStatement{Token: p.curToken}
-	if !p.expectPeek(token.IDENT) {
-		return nil
+	if p.peekTokenIs(token.IDENT) {
+		p.nextToken()
+		name := p.curToken
+		lit.Name = &name
 	}
 
-	lit.Name = p.curToken
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}

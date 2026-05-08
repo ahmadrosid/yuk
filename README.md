@@ -57,6 +57,8 @@ func main() {
         "date": "2022-07-27"
     }
 
+    var payload = struct(Name string, Age int)
+
     if true {
         var ok = "works"
     } else {
@@ -70,10 +72,9 @@ func main() {
 - [x] Simple switch statement
   - [x] Handle multiple case statement
 - [x] Shortcut map
-- [ ] Anonymous struct
+- [x] Anonymous struct
 - [ ] String extentions `"some".len()`, `some.is_empty()`
 - [ ] Array extentions `[1,2,3].len()`, `arr.is_empty()`
-- [ ] Anonymous struct
 - [ ] Easier to implement struct
 - [ ] Mutable and immutable struct implementation
 - [ ] Macro

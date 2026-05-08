@@ -34,6 +34,45 @@ func TestVarStatement(t *testing.T) {
 	}
 }
 
+func TestAnonymousStructExpression(t *testing.T) {
+	input := "var user = struct(Name string, Age int)"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statement. got=%q", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.VarStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not *ast.VarStatement. got=%T", program.Statements[0])
+	}
+
+	structExpr, ok := stmt.Value.(*ast.StructStatement)
+	if !ok {
+		t.Fatalf("stmt.Value is not *ast.StructStatement. got=%T", stmt.Value)
+	}
+
+	if structExpr.Name != nil {
+		t.Fatalf("expected anonymous struct, got name=%q", structExpr.Name.Literal)
+	}
+
+	if len(structExpr.Attributes) != 2 {
+		t.Fatalf("struct attributes wrong length. got=%d", len(structExpr.Attributes))
+	}
+
+	if structExpr.Attributes[0].Name.Literal != "Name" || structExpr.Attributes[0].Type.Literal != "string" {
+		t.Fatalf("unexpected first attribute: %+v", structExpr.Attributes[0])
+	}
+
+	if structExpr.Attributes[1].Name.Literal != "Age" || structExpr.Attributes[1].Type.Literal != "int" {
+		t.Fatalf("unexpected second attribute: %+v", structExpr.Attributes[1])
+	}
+}
+
 func testVarStatement(t *testing.T, stmt ast.Statement, identifier string) bool {
 	if stmt.TokenLiteral() != "var" {
 		t.Errorf("stmt.TokenLiteral no 'var'. got-%q", stmt.TokenLiteral())
